@@ -19,11 +19,10 @@ import javax.net.ssl.HttpsURLConnection;
 public class URLsender {
     
     public static void sendMissatge(String text, long chatId) throws Exception {
-        HttpsURLConnection connection = (HttpsURLConnection) Keys.sendMessageURL(chatId, text).openConnection();
-
+        HttpsURLConnection connection = (HttpsURLConnection) Utils.sendMessageURL(chatId, text).openConnection();
         //add reuqest header
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("User-Agent", Keys.USER_AGENT);
+        connection.setRequestProperty("User-Agent", Utils.USER_AGENT);
         connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
         String urlParameters = "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
 

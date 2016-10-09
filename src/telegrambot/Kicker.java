@@ -39,10 +39,10 @@ public class Kicker {
         String[] words = fixText(content);
         for (int i = 0; i < words.length && !ret; ++i) {
             int j = 0;
-            int k = Keys.badwords.length-1;
+            int k = Utils.badwords.length-1;
             while (j <= k && !ret) {
                 int m = (j+k)/2;
-                int comp = words[i].compareTo(Keys.badwords[m]);
+                int comp = words[i].compareTo(Utils.badwords[m]);
                 if (comp < 0) {
                     k = m-1;
                 }
@@ -56,14 +56,14 @@ public class Kicker {
     }
     
     boolean kickImage(String file_id) throws MalformedURLException, IOException, ParseException{        
-        BufferedReader reader = new BufferedReader(new InputStreamReader(Keys.fileURL(file_id).openStream()));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(Utils.fileURL(file_id).openStream()));
         String inputLine;
         while ((inputLine = reader.readLine()) != null){
             JSONParser parser = new JSONParser();
             JSONObject obj = (JSONObject) parser.parse(inputLine);
             JSONObject result = (JSONObject) obj.get("result");
             String filepath = (String) result.get("file_path");
-            String photo_url_string = Keys.bot_file_url + filepath;
+            String photo_url_string = Utils.bot_file_url + filepath;
             String base_analysis_url_string = "https://api.projectoxford.ai/vision/v1.0/analyze";
             base_analysis_url_string += "?visualFeatures=Adult";
             
@@ -71,7 +71,7 @@ public class Kicker {
             URL base_analysis_url = new URL(base_analysis_url_string);
             HttpsURLConnection con = (HttpsURLConnection) base_analysis_url.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("User-Agent", Keys.USER_AGENT);
+            con.setRequestProperty("User-Agent", Utils.USER_AGENT);
             con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
             con.setRequestProperty("Ocp-Apim-Subscription-Key", "e33ca72e0f86493296407cfa187afd07");
             con.setRequestProperty("Content-Type","application/json"); 

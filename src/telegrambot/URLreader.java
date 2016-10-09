@@ -63,13 +63,13 @@ public class URLreader {
         }
         kick = kick || kicker.kick(content);
         if (kick) {
-            URL kick_url = Keys.kickURL(chat_id, user_id);
+            URL kick_url = Utils.kickURL(chat_id, user_id);
             try {
-                enviaMissatge(Keys.kickedUserMessage(username, chat_id));
+                enviaMissatge(Utils.kickedUserMessage(username, chat_id));
                 new BufferedReader(new InputStreamReader(kick_url.openStream()));
             }
             catch(java.io.IOException e) {
-                enviaMissatge(Keys.errorKickedUserMessage(username, chat_id));
+                enviaMissatge(Utils.errorKickedUserMessage(username, chat_id));
             }
         }else{
             Missatge missatge = new Missatge(content, chat_id,missatge_anterior,username);
@@ -79,7 +79,7 @@ public class URLreader {
         }
     }
     public void llegeix() throws Exception{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(Keys.updateURL(maxupdate+1).openStream()));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(Utils.updateURL(maxupdate+1).openStream()));
         String inputLine;
         String text="";
         while ((inputLine = reader.readLine()) != null){

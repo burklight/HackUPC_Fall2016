@@ -14,7 +14,7 @@ import java.net.URLEncoder;
  *
  * @author Pau
  */
-public class Keys {
+public class Utils {
     public static final String bot_token = "288665307:AAFAMAOX8W-U3tXlXaRvCazK8gou1GgdmdE";
     public static final String bot_base_url = "https://api.telegram.org/bot"+bot_token+"/";
     public static final String bot_file_url = "https://api.telegram.org/file/bot" + bot_token + "/";
@@ -32,7 +32,7 @@ public class Keys {
     }
     
     public static URL sendMessageURL(long chat_id, String text) throws UnsupportedEncodingException, MalformedURLException{
-        return new URL(Keys.bot_base_url + "sendmessage?chat_id=" + chat_id + "&text=" + URLEncoder.encode(text, "UTF-8"));
+        return new URL(Utils.bot_base_url + "sendmessage?chat_id=" + chat_id + "&text=" + URLEncoder.encode(text, "UTF-8"));
     }
     
     public static URL spellCheckURL(Missatge m) throws UnsupportedEncodingException, MalformedURLException{

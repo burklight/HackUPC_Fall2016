@@ -22,9 +22,9 @@ public class OrtoCorrector {
     public void corregirMissatge (Missatge missatge, long chatId) throws Exception {
         if (missatge.text == null) return;
         if (missatge.text.equals("/spellcheck")) return;
-        HttpsURLConnection connection = (HttpsURLConnection) Keys.spellCheckURL(missatge).openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) Utils.spellCheckURL(missatge).openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("User-Agent", Keys.USER_AGENT);
+        connection.setRequestProperty("User-Agent", Utils.USER_AGENT);
         connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
         connection.setRequestProperty("Ocp-Apim-Subscription-Key", "9e0c572f964d4a239128de5941c37f52");// clau antiga 096215d5d28d4d86a83b846dfe2d9f66
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
