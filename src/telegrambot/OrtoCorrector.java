@@ -19,10 +19,9 @@ import org.json.simple.parser.JSONParser;
  * @author David
  */
 public class OrtoCorrector {
-    
-    
     public void corregirMissatge (Missatge missatge, long chatId) throws Exception {
         if (missatge.text == null) return;
+        if (missatge.text.equals("/spellcheck")) return;
         HttpsURLConnection connection = (HttpsURLConnection) Keys.spellCheckURL(missatge).openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("User-Agent", Keys.USER_AGENT);

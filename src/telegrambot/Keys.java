@@ -26,7 +26,9 @@ public class Keys {
     }
     
     public static URL updateURL(long offset) throws MalformedURLException{
-        return new URL(bot_base_url + "getUpdates?offset=" + (offset+1));
+        URL url = new URL(bot_base_url + "getUpdates?offset=" + offset);
+        //System.out.println("offset: "+offset);
+        return url;
     }
     
     public static URL sendMessageURL(long chat_id, String text) throws UnsupportedEncodingException, MalformedURLException{
@@ -45,11 +47,13 @@ public class Keys {
     }
     
     public static Missatge kickedUserMessage(String username, long chat_id){
-        return new Missatge ("Kicked "+username+" for inappropiate content.",chat_id,null,null);
+        if (chat_id < 0) return new Missatge ("Kicked " + username + " for inappropiate content.",chat_id,null,null);
+        return null;
     }
     
     public static Missatge errorKickedUserMessage(String username, long chat_id){
-        return new Missatge ("Couldn't kick " + username + ". Please, give me admin permission.",chat_id,null,null);
+        if (chat_id < 0) return new Missatge ("Couldn't kick " + username + ". Please, give me admin permission.",chat_id,null,null);
+        return null;
     }
     
     
