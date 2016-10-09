@@ -21,39 +21,30 @@ import org.json.simple.parser.JSONParser;
 public class OrtoCorrector {
     
     
-    public void corregirMissatge (Missatge m, long chatId) throws Exception {
-        if (m.text == null) return;
-        String url = "https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/";
-        url += "?text="+URLEncoder.encode(m.text, "UTF-8");
-        url += "&mode=spell";
-        if (m.anterior != null && m.anterior != null) url += "&preContextText=" + URLEncoder.encode(m.anterior, "UTF-8");
-        
-        JSONObject head = new JSONObject();
-        URL obj = new URL(url);
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", Keys.USER_AGENT);
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-        con.setRequestProperty("Ocp-Apim-Subscription-Key", "9e0c572f964d4a239128de5941c37f52");// clau antiga 096215d5d28d4d86a83b846dfe2d9f66
-        int responseCode = con.getResponseCode();
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    public void corregirMissatge (Missatge missatge, long chatId) throws Exception {
+        if (missatge.text == null) return;
+        HttpsURLConnection connection = (HttpsURLConnection) Keys.spellCheckURL(missatge).openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("User-Agent", Keys.USER_AGENT);
+        connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+        connection.setRequestProperty("Ocp-Apim-Subscription-Key", "9e0c572f964d4a239128de5941c37f52");// clau antiga 096215d5d28d4d86a83b846dfe2d9f66
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
 
-        while ((inputLine = in.readLine()) != null) {
+        while ((inputLine = reader.readLine()) != null) {
                 response.append(inputLine);
         }
-        in.close();
+        reader.close();
         
         JSONParser parser = new JSONParser();
-        JSONObject res = (JSONObject) parser.parse(response.toString());
+        JSONObject result = (JSONObject) parser.parse(response.toString());
+        JSONArray flaggedTokens = (JSONArray) result.get("flaggedTokens");
         
-        JSONArray ft = (JSONArray) res.get("flaggedTokens");
-        
-        if (ft.size() > 0) {
-            String output = m.username + ", you have made some spelling mistakes:\n";
-            for (int i = 0; i < ft.size(); ++i) {
-                JSONObject token = (JSONObject) ft.get(i);
+        if (flaggedTokens.size() > 0) {
+            String output = missatge.username + ", you have made some spelling mistakes:\n";
+            for (int i = 0; i < flaggedTokens.size(); ++i) {
+                JSONObject token = (JSONObject) flaggedTokens.get(i);
                 output += "- You have written " + token.get("token") + " and maybe you meant ";
                 JSONArray suggestions = (JSONArray) token.get("suggestions");
                 for (int j = 0; j < suggestions.size(); ++j) {

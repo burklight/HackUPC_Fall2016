@@ -19,33 +19,28 @@ import javax.net.ssl.HttpsURLConnection;
 public class URLsender {
     
     public static void sendMissatge(String text, long chatId) throws Exception {
-        String url = Keys.bot_base_url + "sendmessage?chat_id=" + chatId + "&text=" + URLEncoder.encode(text, "UTF-8");
-        
-        URL obj = new URL(url);
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) Keys.sendMessageURL(chatId, text).openConnection();
 
         //add reuqest header
-        con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", Keys.USER_AGENT);
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("User-Agent", Keys.USER_AGENT);
+        connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
         String urlParameters = "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
 
         // Send post request
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(urlParameters);
-        wr.flush();
-        wr.close();
+        connection.setDoOutput(true);
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+        outputStream.writeBytes(urlParameters);
+        outputStream.flush();
+        outputStream.close();
 
-        int responseCode = con.getResponseCode();
-        BufferedReader in = new BufferedReader(
-            new InputStreamReader(con.getInputStream()));
+        BufferedReader reader = new BufferedReader(
+            new InputStreamReader(connection.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
+        while ((inputLine = reader.readLine()) != null) {
                 response.append(inputLine);
         }
-        in.close();
+        reader.close();
     }
 }

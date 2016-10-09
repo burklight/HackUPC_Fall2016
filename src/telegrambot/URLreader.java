@@ -47,13 +47,13 @@ public class URLreader {
         }
         kick = kick || kicker.kick(content);
         if (kick) {
-            URL kick_url = new URL(Keys.bot_base_url + "kickChatMember?chat_id=" + chat_id + "&user_id=" + user_id);
+            URL kick_url = Keys.kickURL(chat_id, user_id);
             try {
-                enviaMissatge(new Missatge("Kicked "+username+" for inappropiate content.",chat_id,null,null));
+                enviaMissatge(Keys.kickedUserMessage(username, chat_id));
                 new BufferedReader(new InputStreamReader(kick_url.openStream()));
             }
             catch(java.io.IOException e) {
-                enviaMissatge(new Missatge("Couldn't kick " + username + ". Please, give me admin permission.",chat_id,null,null));
+                enviaMissatge(Keys.errorKickedUserMessage(username, chat_id));
             }
         }else{
             Missatge missatge = new Missatge(content, chat_id,missatge_anterior,username);

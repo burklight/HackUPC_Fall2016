@@ -36,7 +36,6 @@ public class Kicker {
         if (content == null) return false;
         boolean ret=false;
         
-        
         String[] words = fixText(content);
         for (int i = 0; i < words.length && !ret; ++i) {
             int j = 0;
@@ -56,19 +55,15 @@ public class Kicker {
         return ret;
     }
     
-    boolean kickImage(String file_id) throws MalformedURLException, IOException, ParseException{
-        URL url = new URL(Keys.bot_base_url + "getFile?file_id=" + file_id);
-        
-        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-
+    boolean kickImage(String file_id) throws MalformedURLException, IOException, ParseException{        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(Keys.fileURL(file_id).openStream()));
         String inputLine;
-        while ((inputLine = in.readLine()) != null){
-
+        while ((inputLine = reader.readLine()) != null){
             JSONParser parser = new JSONParser();
             JSONObject obj = (JSONObject) parser.parse(inputLine);
             JSONObject result = (JSONObject) obj.get("result");
             String filepath = (String) result.get("file_path");
-            String photo_url_string = "https://api.telegram.org/file/bot288665307:AAFAMAOX8W-U3tXlXaRvCazK8gou1GgdmdE/"+filepath;
+            String photo_url_string = Keys.bot_file_url + filepath;
             String base_analysis_url_string = "https://api.projectoxford.ai/vision/v1.0/analyze";
             base_analysis_url_string += "?visualFeatures=Adult";
             
@@ -89,14 +84,14 @@ public class Kicker {
             
             
             int responseCode = con.getResponseCode();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            BufferedReader response_reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine2;
             StringBuffer response = new StringBuffer();
 
-            while ((inputLine2 = reader.readLine()) != null) {
+            while ((inputLine2 = response_reader.readLine()) != null) {
                     response.append(inputLine2);
             }
-            reader.close();
+            response_reader.close();
             JSONObject response_obj = (JSONObject) parser.parse(response.toString());
             JSONObject adult = (JSONObject) response_obj.get("adult");
             boolean isAdultContent = (boolean) adult.get("isAdultContent");
